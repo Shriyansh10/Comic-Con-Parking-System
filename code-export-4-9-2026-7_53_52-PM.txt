@@ -1,0 +1,102 @@
+title Venue Parking Management System
+
+// Entities
+// Car details 
+// Car categories
+// Parking spots 
+// Reservation Categories
+// Tickets
+// Payments
+
+vehicles_owners [color: Green] {
+  id uuid pk
+  name text
+  email text
+  phone_no text
+
+  updatedAt timestamp
+  createdAt timestamp
+}
+
+vehicle_categories[color: Yellow] {
+  id uuid pk
+  name text
+  base_fare number
+
+  updatedAt timestamp
+  createdAt timestamp
+}
+
+vehicles [color: Purple] {
+  id uuid pk
+  vehicle_owner_id uuid fk
+  vehicle_category_id uuid fk
+    
+  updatedAt timestamp
+  createdAt timestamp
+}
+
+reservation_categories[color: Red] {
+  id uuid pk
+  name text
+
+  updatedAt timestamp
+  createdAt timestamp
+}
+
+parking_spots[color: Orange] {
+  id uuid pk
+  zone_id uuid fk
+  reservation_category_id uuid fk
+
+  updatedAt timestamp
+  createdAt timestamp
+}
+
+zones{
+  id uuid pk
+  name text
+  level text
+  capacity number
+  
+  createdAt timestamp
+  updatedAt timestamp
+}
+
+sessions[color: Red] {
+  id uuid pk
+  vehicle_id uuid fk
+  parking_spot_id uuid fk
+  reservation_category_id uuid fk
+  entry_time timestamp
+  exit_time timestamp
+  fare_per_hour number
+  final_amount number
+
+  updatedAt timestamp
+  createdAt timestamp
+}
+
+payments[color: Green] {
+  id uuid pk
+  session_id uuid fk
+  method text
+  status check(success, failed, pending)
+  amount number
+  paid_at timestamp
+
+  updatedAt timestamp
+  createdAt timestamp
+}
+
+vehicles.vehicle_category_id > vehicle_categories.id
+vehicles.vehicle_owner_id - vehicles_owners.id
+sessions.reservation_category_id > reservation_categories.id
+
+parking_spots.reservation_category_id > reservation_categories.id
+parking_spots.zone_id > zones.id
+
+sessions.vehicle_id < vehicles.id
+sessions.parking_spot_id > parking_spots.id
+
+payments.session_id - sessions.id
